@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 分析 - AI Reading</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="wide">
+        {% include 'partials/nav.html' %}
+
+        <h1>AI 分析</h1>
+        <p class="hint">在下方编写提示词，控制 AI 如何处理你已上传的文本。分析可能需要几十秒。</p>
+
+        {% if error %}
+        <p class="message error">{{ error }}</p>
+        {% endif %}
+        {% if request.args.get('success') %}
+        <p class="message success">分析完成！结果已保存在本页下方。</p>
+        {% endif %}
+
+        {% if not has_text %}
+        <p class="empty">请先在「上传文本」页面上传 .txt 文件，再进行分析。</p>
+        <p><a class="btn" href="{{ url_for('upload') }}">去上传</a></p>
+        {% else %}
+        <section class="meta-box">
+            <h2>待分析文本</h2>
+            <ul>
+                <li>文件名：{{ meta.filename }}</li>
+                <li>字符数：{{ meta.char_count }}</li>
+            </ul>
+        </section>
+
+        <form class="analyze-form" action="{{ url_for('analyze') }}" method="post">
+            <label for="prompt">提示词（告诉 AI 要做什么）</label>
+            <textarea id="prompt" name="prompt" rows="8" required>{{ prompt }}</textarea>
+            <button type="submit">开始 AI 分析</button>
+        </form>
+
+        {% if analysis %}
+        <section class="analysis-result">
+            <h2>分析结果</h2>
+            <p class="analysis-meta">
+                基于：{{ analysis.source_filename }} ·
+                {{ analysis.created_at }}
+            </p>
+            <details class="prompt-used">
+                <summary>查看本次使用的提示词</summary>
+                <pre>{{ analysis.prompt }}</pre>
+            </details>
+            <pre class="result-body">{{ analysis.result }}</pre>
+        </section>
+        {% endif %}
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -29,15 +29,42 @@ python app.py
 
 按 `Ctrl + C` 可停止服务。
 
+## 配置 AI（首次使用必做）
+
+```bash
+copy .env.example .env
+```
+
+编辑 `.env`，填入你的 API 密钥和模型信息：
+
+| 变量 | 说明 |
+|------|------|
+| `AI_API_KEY` | API 密钥（必填） |
+| `AI_BASE_URL` | 接口地址，OpenAI 默认 `https://api.openai.com/v1` |
+| `AI_MODEL` | 模型名，如 `gpt-4o-mini` |
+
+国内大模型（DeepSeek、通义等）一般也兼容此格式，按官方文档填写 `AI_BASE_URL` 和 `AI_MODEL` 即可。
+
+## 功能
+
+- **上传 TXT**：`/upload` 页面上传文本
+- **历史记录**：`/history` 查看历史上传，可恢复为当前文本
+- **AI 分析**：`/analyze` 栏目编写提示词，控制 AI 如何处理文本
+- **接口**：`GET /api/text`、`GET /api/history`、`GET /api/analysis`
+
 ## 目录说明
 
 ```
 ai_reading/
-├── app.py           # 网站主程序（路由写在这里）
-├── requirements.txt # 第三方库列表
-├── templates/       # HTML 页面
-├── static/          # CSS、图片等静态文件
-└── .gitignore       # 告诉 Git 哪些文件不要提交
+├── app.py            # 路由入口
+├── text_store.py     # 当前文本读写
+├── history_store.py  # 上传历史记录
+├── analysis_store.py # AI 分析结果读写
+├── ai_service.py     # 调用 AI API
+├── .env.example      # 配置模板（复制为 .env）
+├── templates/        # HTML 页面
+├── static/           # CSS
+└── data/             # 文本与分析结果（不提交 Git）
 ```
 
 ## Git 常用命令

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传文本 - AI Reading</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="wide">
+        {% include 'partials/nav.html' %}
+
+        <h1>上传 TXT 文本</h1>
+        <p class="hint">上传后可在「AI 分析」栏目编写提示词进行分析。</p>
+
+        {% if request.args.get('success') %}
+        <p class="message success">
+            上传成功！
+            <a href="{{ url_for('analyze') }}">前往 AI 分析 →</a>
+        </p>
+        {% endif %}
+        {% if error %}
+        <p class="message error">{{ error }}</p>
+        {% endif %}
+
+        <form class="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+            <label class="file-label">
+                <input type="file" name="file" accept=".txt,text/plain" required>
+                <span>选择 .txt 文件</span>
+            </label>
+            <button type="submit">上传</button>
+        </form>
+
+        {% if meta %}
+        <section class="meta-box">
+            <h2>当前已加载的文本</h2>
+            <ul>
+                <li>文件名：{{ meta.filename }}</li>
+                <li>字符数：{{ meta.char_count }}</li>
+                <li>更新时间：{{ meta.updated_at }}</li>
+            </ul>
+        </section>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史记录 - AI Reading</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="wide">
+        {% include 'partials/nav.html' %}
+
+        <h1>上传历史</h1>
+        <p class="hint">每次上传的文本都会保存在这里，最多保留最近 100 条。</p>
+
+        {% if request.args.get('loaded') %}
+        <p class="message success">已设为当前文本，可前往 AI 分析。</p>
+        {% endif %}
+
+        {% if records %}
+        <ul class="history-list">
+            {% for r in records %}
+            <li class="history-item">
+                <div class="history-item-head">
+                    <a class="history-title" href="{{ url_for('history_detail', record_id=r.id) }}">{{ r.filename }}</a>
+                    <span class="history-date">{{ r.uploaded_at }}</span>
+                </div>
+                <p class="history-preview">{{ r.preview }}</p>
+                <div class="history-actions">
+                    <span class="history-meta">{{ r.char_count }} 字</span>
+                    <form action="{{ url_for('history_load', record_id=r.id) }}" method="post" class="inline-form">
+                        <button type="submit" class="btn-small">设为当前</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty">暂无上传记录，请先去上传文本。</p>
+        <p><a class="btn" href="{{ url_for('upload') }}">去上传</a></p>
+        {% endif %}
+    </main>
+</body>
+</html>

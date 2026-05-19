@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ record.filename }} - 历史记录</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="wide">
+        {% include 'partials/nav.html' %}
+
+        <p class="back-link"><a href="{{ url_for('history') }}">← 返回历史列表</a></p>
+
+        <h1>{{ record.filename }}</h1>
+        <p class="history-meta-line">
+            {{ record.char_count }} 字 · 上传于 {{ record.uploaded_at }}
+        </p>
+
+        <form action="{{ url_for('history_load', record_id=record.id) }}" method="post" class="detail-actions">
+            <button type="submit">设为当前文本</button>
+            <a class="btn btn-secondary" href="{{ url_for('analyze') }}">去 AI 分析</a>
+        </form>
+
+        <section class="meta-box">
+            <h2>文本内容</h2>
+            <pre class="preview preview-tall">{{ record.content }}</pre>
+        </section>
+    </main>
+</body>
+</html>

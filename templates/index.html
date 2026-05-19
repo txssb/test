@@ -7,9 +7,42 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <main>
+    <main class="wide">
+        {% include 'partials/nav.html' %}
+
         <h1>AI Reading</h1>
-        <p>项目已就绪，可以开始开发了。</p>
+        <p class="hint">上传 txt 文本后，在「AI 分析」栏目编写提示词，让 AI 按你的要求处理文本。</p>
+
+        <p>
+            <a class="btn" href="{{ url_for('upload') }}">去上传文本</a>
+            {% if meta %}
+            <a class="btn btn-secondary" href="{{ url_for('analyze') }}">去 AI 分析</a>
+            {% endif %}
+        </p>
+
+        {% if meta %}
+        <section class="meta-box">
+            <h2>当前文本</h2>
+            <ul>
+                <li>文件名：{{ meta.filename }}</li>
+                <li>字符数：{{ meta.char_count }}</li>
+            </ul>
+            {% if preview %}
+            <pre class="preview">{{ preview }}</pre>
+            {% endif %}
+        </section>
+        {% else %}
+        <p class="empty">尚未上传文本，请先上传 .txt 文件。</p>
+        {% endif %}
+
+        {% if analysis %}
+        <section class="meta-box analysis-snippet">
+            <h2>最新 AI 分析</h2>
+            <p class="analysis-meta">基于：{{ analysis.source_filename }}</p>
+            <pre class="preview">{{ analysis.result[:400] }}{% if analysis.result|length > 400 %}…{% endif %}</pre>
+            <p><a href="{{ url_for('analyze') }}">查看完整分析 →</a></p>
+        </section>
+        {% endif %}
     </main>
 </body>
 </html>
